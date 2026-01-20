@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">{{ title }}</h1>
+    <p class="text-gray-600">Isi form di bawah untuk {% if portfolio %}mengedit{% else %}menambah{% endif %} portfolio</p>
+</div>
+
+<div class="max-w-2xl">
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            
+            <div class="space-y-6">
+                <!-- Title -->
+                <div>
+                    {{ form.title.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.title(class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none") }}
+                    {% if form.title.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.title.errors[0] }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div>
+                    {{ form.description.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.description(class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none", rows=4) }}
+                    <p class="mt-1 text-sm text-gray-500">Deskripsi singkat tentang project ini</p>
+                </div>
+
+                <!-- Category -->
+                <div>
+                    {{ form.category.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.category(class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none") }}
+                </div>
+
+                <!-- Image Upload -->
+                <div>
+                    {{ form.image.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    <div class="mt-1 flex items-center space-x-4">
+                        {% if portfolio and portfolio.image_path %}
+                            <img src="{{ portfolio.image_path }}" alt="{{ portfolio.title }}" class="w-32 h-32 object-cover rounded-lg">
+                        {% endif %}
+                        <div class="flex-1">
+                            {{ form.image(class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none") }}
+                            <p class="mt-1 text-sm text-gray-500">Format: JPG, PNG, GIF (Max 16MB)</p>
+                            {% if not portfolio %}
+                            <p class="mt-1 text-sm text-red-500">* Wajib diisi untuk portfolio baru</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order -->
+                <div>
+                    {{ form.order.label(class="block text-sm font-medium text-gray-700 mb-2") }}
+                    {{ form.order(class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none") }}
+                    <p class="mt-1 text-sm text-gray-500">Urutan tampilan (0 = paling awal)</p>
+                </div>
+
+                <!-- Active Status -->
+                <div class="flex items-center">
+                    {{ form.is_active(class="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500") }}
+                    {{ form.is_active.label(class="ml-2 text-sm font-medium text-gray-700") }}
+                    <p class="ml-2 text-sm text-gray-500">(Hanya portfolio aktif yang tampil di website)</p>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="mt-8 flex space-x-4">
+                <button type="submit" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition">
+                    💾 Simpan
+                </button>
+                <a href="{{ url_for('admin_portfolio') }}" class="flex-1 text-center border-2 border-gray-300 text-gray-700 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition">
+                    Batal
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

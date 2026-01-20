@@ -1,0 +1,66 @@
+/* Custom CSS untuk Working Media */
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #FF6B35;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #E55A2B;
+}
+
+/* Mobile Menu (untuk future enhancement) */
+@media (max-width: 768px) {
+    .mobile-menu {
+        display: none;
+    }
+    
+    .mobile-menu.active {
+        display: block;
+    }
+}
+
+/* Print styles */
+@media print {
+    nav, footer, #scrollTop {
+        display: none;
+    }
+}
+
+/* Accessibility improvements */
+a:focus, button:focus {
+    outline: 2px solid #FF6B35;
+    outline-offset: 2px;
+}
+
+/* Loading animation */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,107,53,.3);
+    border-radius: 50%;
+    border-top-color: #FF6B35;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Parallax effect helper */
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
