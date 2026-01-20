@@ -293,35 +293,49 @@
         }
         
         .hero-gradient {
-            background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
+            background: 
+                linear-gradient(to bottom, 
+                    rgba(255, 107, 53, 0.85) 0%, 
+                    rgba(229, 90, 43, 0.8) 40%, 
+                    rgba(216, 80, 40, 0.7) 60%, 
+                    rgba(206, 77, 43, 0.5) 75%,
+                    rgba(255, 255, 255, 0.9) 92%,
+                    rgba(255, 255, 255, 1) 100%),
+                url('https://plus.unsplash.com/premium_photo-1661963731351-3f88605e04be?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8a2FudG9yJTIwb3JhbmdlfGVufDB8fDB8fHww');
+            background-size: cover;
+            background-position: center;
+            background-attachment: scroll;
             position: relative;
             overflow: hidden;
         }
         
+        @media (min-width: 768px) {
+            .hero-gradient {
+                background-attachment: fixed;
+            }
+        }
+        
         .hero-gradient::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+        }
+        
+        .hero-gradient::after {
             content: '';
             position: absolute;
             width: 600px;
             height: 600px;
             background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
             border-radius: 50%;
-            top: -200px;
-            right: -100px;
-            filter: blur(60px);
-            animation: float 8s ease-in-out infinite;
-        }
-        
-        .hero-gradient::after {
-            content: '';
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(255, 107, 53, 0.3) 0%, transparent 70%);
-            border-radius: 50%;
-            bottom: -100px;
-            left: -50px;
-            filter: blur(80px);
-            animation: float 10s ease-in-out infinite reverse;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            filter: blur(100px);
+            animation: float 10s ease-in-out infinite;
         }
         
         @keyframes float {
@@ -579,16 +593,20 @@
                         Mitra Aktivasi Media Sosial dan Konten Visual Anda
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#services" class="btn-primary bg-white text-brand-orange px-8 py-4 rounded-full font-bold hover:bg-gray-50 transition text-center">
+                        <a href="#services" class="btn-primary bg-brand-orange text-white px-8 py-4 rounded-full font-bold hover:bg-brand-orange-dark transition text-center shadow-lg">
                             Lihat Layanan
                         </a>
-                        <a href="#contact" class="btn-secondary border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:text-brand-orange transition text-center">
+                        <a href="#contact" class="btn-secondary border-2 border-white text-white px-8 py-4 rounded-full font-bold hover:bg-white hover:text-brand-orange transition text-center">
                             Konsultasi Gratis
                         </a>
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center relative">
-                    <div class="absolute inset-0 bg-white/10 backdrop-blur-3xl rounded-2xl transform rotate-6"></div>
+                    <!-- Background Image (Rotated & Blurred) -->
+                    <div class="absolute inset-0 rounded-2xl transform rotate-6 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=600&fit=crop" alt="Office Background" class="w-full h-full object-cover opacity-40 blur-sm">
+                    </div>
+                    <!-- Foreground Image -->
                     <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=600&fit=crop" alt="Team Working" class="rounded-2xl shadow-2xl w-full max-w-md relative z-10 border-4 border-white/20">
                 </div>
             </div>
