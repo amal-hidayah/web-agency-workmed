@@ -106,6 +106,39 @@
         .mobile-menu.active {
             max-height: 500px;
         }
+        
+        /* Portfolio mobile styles */
+        @media (max-width: 768px) {
+            .portfolio-grid .portfolio-item:not(:first-child) {
+                display: none;
+            }
+            
+            .portfolio-grid.expanded .portfolio-item {
+                display: block;
+            }
+            
+            .portfolio-expand-overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+            }
+            
+            .portfolio-grid.expanded .portfolio-expand-overlay {
+                display: none;
+            }
+            
+            #portfolio-collapse-btn {
+                display: none;
+            }
+            
+            .portfolio-grid.expanded ~ div #portfolio-collapse-btn {
+                display: inline-flex;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -538,9 +571,9 @@
             <div class="mt-16">
                 <h3 class="text-2xl font-bold text-brand-gray mb-8 text-center">Hasil Karya Kami</h3>
                 {% if portfolio_items %}
-                <div class="grid md:grid-cols-3 gap-6">
+                <div id="portfolio-grid" class="portfolio-grid grid md:grid-cols-3 gap-6">
                     {% for item in portfolio_items %}
-                    <div class="group relative overflow-hidden rounded-xl shadow-lg hover:scale-105 transition cursor-pointer">
+                    <div class="portfolio-item group relative overflow-hidden rounded-xl shadow-lg hover:scale-105 transition cursor-pointer">
                         <img src="{{ item.image_path }}" alt="{{ item.title }}" class="w-full h-64 object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
                             <div>
@@ -550,8 +583,29 @@
                                 {% endif %}
                             </div>
                         </div>
+                        {% if loop.first %}
+                        <!-- Overlay "Lihat Lebih Banyak" hanya di item pertama untuk mobile -->
+                        <div class="portfolio-expand-overlay md:hidden">
+                            <div class="text-center text-white">
+                                <svg class="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                                <p class="text-lg font-bold">Lihat Lebih Banyak</p>
+                                <p class="text-sm opacity-80">+{{ portfolio_items|length - 1 }} Portfolio Lainnya</p>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
+                </div>
+                <!-- Tombol Tutup Portfolio (muncul setelah expand di mobile) -->
+                <div class="text-center mt-8">
+                    <button id="portfolio-collapse-btn" class="portfolio-collapse-btn md:hidden bg-brand-orange hover:bg-brand-orange-dark text-white px-8 py-3 rounded-full font-semibold transition inline-flex items-center space-x-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                        </svg>
+                        <span>Tutup</span>
+                    </button>
                 </div>
                 {% else %}
                 <!-- Belum ada portfolio -->
@@ -625,22 +679,22 @@
                 <!-- Contact Form -->
                 <div class="bg-gray-50 rounded-2xl p-8">
                     <h3 class="text-2xl font-bold text-brand-gray mb-6">Kirim Pesan</h3>
-                    <form action="https://formspree.io/f/your-form-id" method="POST" class="space-y-4">
+                    <form id="contact-form" class="space-y-4">
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Nama Lengkap</label>
-                            <input type="text" name="name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
+                            <input type="text" id="contact-name" name="name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
                         </div>
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Email</label>
-                            <input type="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
+                            <input type="email" id="contact-email" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
                         </div>
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">No. WhatsApp</label>
-                            <input type="tel" name="phone" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
+                            <input type="tel" id="contact-phone" name="phone" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
                         </div>
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Layanan yang Diminati</label>
-                            <select name="service" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
+                            <select id="contact-service" name="service" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition">
                                 <option>Aktivasi Sosial Media</option>
                                 <option>Konten Visual</option>
                                 <option>Online Advertising</option>
@@ -651,10 +705,10 @@
                         </div>
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Pesan</label>
-                            <textarea name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition"></textarea>
+                            <textarea id="contact-message" name="message" rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange focus:outline-none transition"></textarea>
                         </div>
                         <button type="submit" class="w-full bg-brand-orange hover:bg-brand-orange-dark text-white px-8 py-3 rounded-lg font-semibold transition">
-                            Kirim Pesan
+                            Kirim via WhatsApp
                         </button>
                     </form>
                 </div>
@@ -769,6 +823,29 @@
                 mobileMenu.classList.remove('active');
             });
         });
+        
+        // Portfolio expand for mobile
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        const expandOverlay = document.querySelector('.portfolio-expand-overlay');
+        const collapseBtn = document.getElementById('portfolio-collapse-btn');
+        
+        if (expandOverlay) {
+            expandOverlay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                portfolioGrid.classList.add('expanded');
+            });
+        }
+        
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', () => {
+                portfolioGrid.classList.remove('expanded');
+                // Scroll ke section portfolio
+                document.getElementById('portfolio').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        }
 
         // Intersection Observer for animations
         const observerOptions = {
@@ -791,6 +868,33 @@
             el.style.transition = 'all 0.6s ease';
             observer.observe(el);
         });
+        
+        // Contact form handler - kirim via WhatsApp
+        const contactForm = document.getElementById('contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const name = document.getElementById('contact-name').value;
+                const email = document.getElementById('contact-email').value;
+                const phone = document.getElementById('contact-phone').value;
+                const service = document.getElementById('contact-service').value;
+                const message = document.getElementById('contact-message').value;
+                
+                const waMessage = `Halo Working Media! 👋\n\n` +
+                    `Saya ${name}, mau tanya-tanya tentang layanan *${service}* dong.\n\n` +
+                    `${message}\n\n` +
+                    `Kalau mau kontak saya bisa via:\n` +
+                    `📧 ${email}\n` +
+                    `📱 ${phone}`;
+                
+                const waUrl = `https://wa.me/6289613922360?text=${encodeURIComponent(waMessage)}`;
+                window.open(waUrl, '_blank');
+                
+                // Reset form
+                contactForm.reset();
+            });
+        }
     </script>
 </body>
 </html>
