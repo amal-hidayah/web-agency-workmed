@@ -138,6 +138,47 @@
             .portfolio-grid.expanded ~ div #portfolio-collapse-btn {
                 display: inline-flex;
             }
+            
+            /* Client logos mobile styles */
+            .clients-section:not(:first-child) {
+                display: none;
+            }
+            
+            .clients-section:first-child .clients-grid > div:nth-child(n+3) {
+                display: none;
+            }
+            
+            .clients-section:first-child .clients-category-title {
+                display: none;
+            }
+            
+            #clients-container.expanded .clients-section {
+                display: block;
+            }
+            
+            #clients-container.expanded .clients-grid > div {
+                display: flex;
+            }
+            
+            #clients-container.expanded .clients-category-title {
+                display: block;
+            }
+            
+            #clients-expand-btn {
+                display: inline-flex;
+            }
+            
+            #clients-container.expanded ~ .clients-main-buttons #clients-expand-btn {
+                display: none;
+            }
+            
+            #clients-collapse-btn {
+                display: none;
+            }
+            
+            #clients-container.expanded ~ .clients-main-buttons #clients-collapse-btn {
+                display: inline-flex;
+            }
         }
     </style>
 </head>
@@ -541,32 +582,50 @@
             </div>
 
             <!-- Dynamic Clients by Category -->
-            {% set categories = clients|groupby('category') %}
-            {% for category, category_clients in categories %}
-            <div class="mb-12">
-                <h3 class="text-2xl font-bold text-brand-gray mb-6 text-center">{{ category }}</h3>
-                {% if category_clients|length > 6 %}
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
-                {% elif category_clients|length > 4 %}
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                {% else %}
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                {% endif %}
-                    {% for client in category_clients %}
-                    <div class="bg-white rounded-xl p-6 shadow hover:shadow-xl transition flex items-center justify-center">
-                        <div class="client-logo text-center">
-                            {% if client.logo_path %}
-                                <img src="{{ client.logo_path }}" alt="{{ client.name }}" class="w-16 h-16 object-contain mx-auto mb-2">
-                            {% else %}
-                                <div class="text-4xl mb-2">{{ client.emoji }}</div>
-                            {% endif %}
-                            <p class="text-sm font-semibold text-gray-700">{{ client.name }}</p>
+            <div id="clients-container">
+                {% set categories = clients|groupby('category') %}
+                {% for category, category_clients in categories %}
+                <div class="clients-section mb-12">
+                    <h3 class="clients-category-title text-2xl font-bold text-brand-gray mb-6 text-center md:block">{{ category }}</h3>
+                    {% if category_clients|length > 6 %}
+                    <div class="clients-grid grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-6">
+                    {% elif category_clients|length > 4 %}
+                    <div class="clients-grid grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                    {% else %}
+                    <div class="clients-grid grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                    {% endif %}
+                        {% for client in category_clients %}
+                        <div class="bg-white rounded-xl p-6 shadow hover:shadow-xl transition flex items-center justify-center">
+                            <div class="client-logo text-center">
+                                {% if client.logo_path %}
+                                    <img src="{{ client.logo_path }}" alt="{{ client.name }}" class="w-16 h-16 object-contain mx-auto mb-2">
+                                {% else %}
+                                    <div class="text-4xl mb-2">{{ client.emoji }}</div>
+                                {% endif %}
+                                <p class="text-sm font-semibold text-gray-700">{{ client.name }}</p>
+                            </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            
+            <!-- Tombol Expand/Collapse Clients Global (mobile only) -->
+            <div class="clients-main-buttons text-center mt-8 md:hidden">
+                <button id="clients-expand-btn" class="bg-brand-orange hover:bg-brand-orange-dark text-white px-8 py-3 rounded-full font-semibold transition inline-flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                    <span>Lihat Semua Klien</span>
+                </button>
+                <button id="clients-collapse-btn" class="bg-brand-orange hover:bg-brand-orange-dark text-white px-8 py-3 rounded-full font-semibold transition inline-flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                    </svg>
+                    <span>Tutup</span>
+                </button>
+            </div>
 
             <!-- Portfolio Images -->
             <div class="mt-16">
@@ -574,8 +633,8 @@
                 {% if portfolio_items %}
                 <div id="portfolio-grid" class="portfolio-grid grid md:grid-cols-3 gap-6">
                     {% for item in portfolio_items %}
-                    <div class="portfolio-item group relative overflow-hidden rounded-xl shadow-lg hover:scale-105 transition cursor-pointer">
-                        <img src="{{ item.image_path }}" alt="{{ item.title }}" class="w-full h-64 object-cover">
+                    <div class="portfolio-item group relative overflow-hidden rounded-xl shadow-lg hover:scale-105 transition cursor-pointer bg-gray-100">
+                        <img src="{{ item.image_path }}" alt="{{ item.title }}" class="w-full min-h-64 max-h-96 object-contain">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
                             <div>
                                 <h4 class="text-white font-bold text-lg">{{ item.title }}</h4>
@@ -837,6 +896,28 @@
         if (collapseBtn) {
             collapseBtn.addEventListener('click', () => {
                 portfolioGrid.classList.remove('expanded');
+                // Scroll ke section portfolio
+                document.getElementById('portfolio').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        }
+        
+        // Clients expand/collapse for mobile
+        const clientsExpandBtn = document.getElementById('clients-expand-btn');
+        const clientsCollapseBtn = document.getElementById('clients-collapse-btn');
+        const clientsContainer = document.getElementById('clients-container');
+        
+        if (clientsExpandBtn) {
+            clientsExpandBtn.addEventListener('click', () => {
+                clientsContainer.classList.add('expanded');
+            });
+        }
+        
+        if (clientsCollapseBtn) {
+            clientsCollapseBtn.addEventListener('click', () => {
+                clientsContainer.classList.remove('expanded');
                 // Scroll ke section portfolio
                 document.getElementById('portfolio').scrollIntoView({
                     behavior: 'smooth',
